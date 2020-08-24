@@ -247,7 +247,7 @@ public class Quest {
             final Player p = quester.getPlayer();
             String msg = Lang.get(p, "questObjectivesTitle");
             msg = msg.replace("<quest>", name);
-            p.sendMessage(ChatColor.GOLD + msg);
+//            p.sendMessage(ChatColor.GOLD + msg);
             plugin.showObjectives(this, quester, false);
             final String stageStartMessage = quester.getCurrentStage(this).startMessage;
             if (stageStartMessage != null) {
