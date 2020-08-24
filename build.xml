@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="SimpleProject" default="createjar" basedir=".">
+
+	<basename file="${basedir}" property="project.projectname" />
+	<property name="project.pluginsLocation" location="PLUGINS DIRECTORY" />
+
+	<target name="clean" description="Cleans project">
+		<exec dir="." executable="sh">
+			<arg line="-c 'sudo -u root rm /home/Minecraft/multicraft/jar/spigot.jar.plugins/${project.projectname}.jar'" />
+		</exec>
+	</target>
+
+	<target name="mvn" depends="clean">
+		<exec dir="." executable="sh">
+			<arg line="-c 'mvn clean install'" />
+		</exec>
+	</target>
+
+	<target name="createjar" description="Create a jar for the project" depends="mvn">
+		<exec dir="." executable="sh">
+			<arg line="-c 'sudo -u root cp target/${project.projectname}.jar /home/Minecraft/multicraft/jar/spigot.jar.plugins/${project.projectname}.jar'" />
+		</exec>
+		<!--<jar destfile="/home/Minecraft/multicraft/jar/spigot.jar.plugins/${project.projectname}.jar">
+			<fileset dir="${basedir}">
+				<include name="*/*.yml" />
+			</fileset>
+			<fileset dir="${basedir}\bin">
+				<include name="**" />
+			</fileset>
+		</jar>-->
+	</target>
+</project>
