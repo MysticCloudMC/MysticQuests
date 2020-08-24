@@ -2,47 +2,47 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>net.mysticcloud</groupId>
-	<artifactId>mystic-survival</artifactId>
+	<artifactId>mystic-quests</artifactId>
 	<version>0.5</version>
 	<properties>
 		<dep.dir>/home/Minecraft/Dependencies</dep.dir>
-		<projectname>MysticSurvival</projectname>
+		<projectname>MysticQuests</projectname>
 	</properties>
 	<name>${projectname}</name>
 	<url>http://www.mysticcloud.net</url>
 	
 	<dependencies>
 		<dependency>
-			<groupId>net.mysticcloud</groupId>
-			<artifactId>mystic-core</artifactId>
+			<groupId>net.milkbowl</groupId>
+			<artifactId>vault</artifactId>
 			<version>0.5</version>
 			<scope>system</scope>
 			<systemPath>${dep.dir}/Vault.jar</systemPath>
 		</dependency>
 		<dependency>
-			<groupId>net.mysticcloud</groupId>
-			<artifactId>mystic-core</artifactId>
+			<groupId>com.sk89q.worldguard</groupId>
+			<artifactId>worldguard</artifactId>
 			<version>0.5</version>
 			<scope>system</scope>
 			<systemPath>${dep.dir}/WorldGuard.jar</systemPath>
 		</dependency>
 		<dependency>
-			<groupId>net.mysticcloud</groupId>
-			<artifactId>mystic-core</artifactId>
+			<groupId>com.sk89q.worldedit</groupId>
+			<artifactId>worldedit</artifactId>
 			<version>0.5</version>
 			<scope>system</scope>
 			<systemPath>${dep.dir}/WorldEdit.jar</systemPath>
 		</dependency>
 		<dependency>
-			<groupId>net.mysticcloud</groupId>
-			<artifactId>mystic-core</artifactId>
+			<groupId>net.citizensnpcs</groupId>
+			<artifactId>citizens</artifactId>
 			<version>0.5</version>
 			<scope>system</scope>
 			<systemPath>${dep.dir}/Citizens.jar</systemPath>
 		</dependency>
 		<dependency>
-			<groupId>net.mysticcloud</groupId>
-			<artifactId>mystic-core</artifactId>
+			<groupId>com.denizenscript</groupId>
+			<artifactId>denizen</artifactId>
 			<version>0.5</version>
 			<scope>system</scope>
 			<systemPath>${dep.dir}/Denizen.jar</systemPath>
