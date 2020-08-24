@@ -496,159 +496,159 @@ public class Quest {
         
         // Inform player
         if (player.isOnline()) {
-            final Player p = (Player)player;
-            p.sendMessage(ChatColor.GOLD + Lang.get(p, "questCompleteTitle").replace("<quest>", ChatColor.YELLOW + name
-                    + ChatColor.GOLD));
-            if (plugin.getSettings().canShowQuestTitles()) {
-                Bukkit.getServer().dispatchCommand(Bukkit.getServer().getConsoleSender(), "title " + p.getName()
-                        + " title " + "{\"text\":\"" + Lang.get(p, "quest") + " " + Lang.get(p, "complete") 
-                        +  "\",\"color\":\"gold\"}");
-                Bukkit.getServer().dispatchCommand(Bukkit.getServer().getConsoleSender(), "title " + p.getName()
-                        + " subtitle " + "{\"text\":\"" + name + "\",\"color\":\"yellow\"}");
-            }
-            p.sendMessage(ChatColor.GREEN + Lang.get(p, "questRewardsTitle"));
-            if (!issuedReward) {
-                p.sendMessage(ChatColor.GRAY + "- (" + Lang.get("none") + ")");
-            } else if (!rews.getDetailsOverride().isEmpty()) {
-                for (final String s: rews.getDetailsOverride()) {
-                    String message = ChatColor.DARK_GREEN + ConfigUtil.parseString(
-                            ChatColor.translateAlternateColorCodes('&', s));
-                    p.sendMessage("- " + message);
-                }
-            } else {
-                if (rews.getQuestPoints() > 0) {
-                    p.sendMessage("- " + ChatColor.DARK_GREEN + rews.getQuestPoints() + " " 
-                            + Lang.get(p, "questPoints"));
-                }
-                for (final ItemStack i : rews.getItems()) {
-                    String text = "error";
-                    if (i.hasItemMeta() && i.getItemMeta().hasDisplayName()) {
-                        if (i.getEnchantments().isEmpty()) {
-                            text = "- " + ChatColor.DARK_AQUA + ChatColor.ITALIC + i.getItemMeta().getDisplayName() 
-                                    + ChatColor.RESET + ChatColor.GRAY + " x " + i.getAmount();
-                        } else {
-                            text = "- " + ChatColor.DARK_AQUA + ChatColor.ITALIC + i.getItemMeta().getDisplayName() 
-                                    + ChatColor.RESET;            
-                            try {
-                                if (!i.getItemMeta().hasItemFlag(ItemFlag.HIDE_ENCHANTS)) {
-                                    text +=  ChatColor.GRAY + " " + Lang.get(p, "with") + ChatColor.DARK_PURPLE;
-                                    for (final Entry<Enchantment, Integer> e : i.getEnchantments().entrySet()) {
-                                        text += " " + ItemUtil.getPrettyEnchantmentName(e.getKey()) + ":" + e.getValue();
-                                    }
-                                }
-                            } catch (final Throwable tr) {
-                                // Do nothing, hasItemFlag() not introduced until 1.8.6
-                            }
-                            text += ChatColor.GRAY + " x " + i.getAmount();
-                        }
-                    } else if (i.getDurability() != 0) {
-                        if (i.getEnchantments().isEmpty()) {
-                            text = "- " + ChatColor.DARK_GREEN + ItemUtil.getName(i) + ":" + i.getDurability() + ChatColor.GRAY
-                                    + " x " + i.getAmount();
-                        } else {
-                            text = "- " + ChatColor.DARK_GREEN + ItemUtil.getName(i) + ":" + i.getDurability() + ChatColor.GRAY
-                                    + " " + Lang.get(p, "with");
-                            for (final Entry<Enchantment, Integer> e : i.getEnchantments().entrySet()) {
-                                text += " " + ItemUtil.getPrettyEnchantmentName(e.getKey()) + ":" + e.getValue();
-                            }
-                            text += ChatColor.GRAY + " x " + i.getAmount();
-                        }
-                    } else {
-                        if (i.getEnchantments().isEmpty()) {
-                            text = "- " + ChatColor.DARK_GREEN + ItemUtil.getName(i) + ChatColor.GRAY + " x " + i.getAmount();
-                        } else {
-                            text = "- " + ChatColor.DARK_GREEN + ItemUtil.getName(i);
-                            try {
-                                if (!i.getItemMeta().hasItemFlag(ItemFlag.HIDE_ENCHANTS)) {
-                                    text += ChatColor.GRAY + " " + Lang.get(p, "with");
-                                    for (final Entry<Enchantment, Integer> e : i.getEnchantments().entrySet()) {
-                                        text += " " + ItemUtil.getPrettyEnchantmentName(e.getKey()) + ":" + e.getValue();
-                                    }
-                                }
-                            } catch (final Throwable tr) {
-                                // Do nothing, hasItemFlag() not introduced until 1.8.6
-                            }
-                            text += ChatColor.GRAY + " x " + i.getAmount();
-                        }
-                    }
-                    p.sendMessage(text);
-                }
-                if (rews.getMoney() > 1) {
-                    p.sendMessage("- " + ChatColor.DARK_GREEN + rews.getMoney() + " " + ChatColor.DARK_PURPLE 
-                            + plugin.getDependencies().getCurrency(true));
-                } else if (rews.getMoney() == 1) {
-                    p.sendMessage("- " + ChatColor.DARK_GREEN + rews.getMoney() + " " + ChatColor.DARK_PURPLE 
-                            + plugin.getDependencies().getCurrency(false));
-                }
-                if (rews.getCommands().isEmpty() == false) {
-                    int index = 0;
-                    for (final String s : rews.getCommands()) {
-                        if (rews.getCommandsOverrideDisplay().isEmpty() == false && rews.getCommandsOverrideDisplay().size() 
-                                > index) {
-                            if (!rews.getCommandsOverrideDisplay().get(index).trim().equals("")) {
-                                p.sendMessage("- " + ChatColor.DARK_GREEN 
-                                        + rews.getCommandsOverrideDisplay().get(index));
-                            }
-                        } else {
-                            p.sendMessage("- " + ChatColor.DARK_GREEN + s);
-                        }
-                        index++;
-                    }
-                }
-                if (rews.getPermissions().isEmpty() == false) {
-                    int index = 0;
-                    for (final String s : rews.getPermissions()) {
-                        if (rews.getPermissionWorlds() != null && rews.getPermissionWorlds().size() > index) {
-                            p.sendMessage("- " + ChatColor.DARK_GREEN + s + " (" + rews.getPermissionWorlds().get(index)
-                                    + ")");
-                        } else {
-                            p.sendMessage("- " + ChatColor.DARK_GREEN + s);
-                            
-                        }
-                        index++;
-                    }
-                }
-                if (rews.getMcmmoSkills().isEmpty() == false) {
-                    for (final String s : rews.getMcmmoSkills()) {
-                        p.sendMessage("- " + ChatColor.DARK_GREEN 
-                                + rews.getMcmmoAmounts().get(rews.getMcmmoSkills().indexOf(s)) + " " 
-                                + ChatColor.DARK_PURPLE + s + " " + Lang.get(p, "experience"));
-                    }
-                }
-                if (rews.getHeroesClasses().isEmpty() == false) {
-                    for (final String s : rews.getHeroesClasses()) {
-                        p.sendMessage("- " + ChatColor.AQUA 
-                                + rews.getHeroesAmounts().get(rews.getHeroesClasses().indexOf(s)) + " " + ChatColor.BLUE 
-                                + s + " " + Lang.get(p, "experience"));
-                    }
-                }
-                for (final String s : rews.getCustomRewards().keySet()) {
-                    CustomReward found = null;
-                    for (final CustomReward cr : plugin.getCustomRewards()) {
-                        if (cr.getName().equalsIgnoreCase(s)) {
-                            found = cr;
-                            break;
-                        }
-                    }
-                    if (found != null) {
-                        final Map<String, Object> datamap = rews.getCustomRewards().get(found.getName());
-                        String message = found.getDisplay();
-                        if (message != null) {
-                            for (final String key : datamap.keySet()) {
-                                message = message.replace("%" + key + "%", datamap.get(key).toString());
-                            }
-                            p.sendMessage("- " + ChatColor.GOLD + message);
-                        } else {
-                            plugin.getLogger().warning("Failed to notify player: " 
-                                    + "Custom Reward does not have an assigned name");
-                        }
-                        found.giveReward(p, rews.getCustomRewards().get(s));
-                    } else {
-                        plugin.getLogger().warning("Quester \"" + player.getName() + "\" completed the Quest \"" + name 
-                                + "\", but the Custom Reward \"" + s + "\" could not be found. Does it still exist?");
-                    }
-                }
-            }
+//            final Player p = (Player)player;
+//            p.sendMessage(ChatColor.GOLD + Lang.get(p, "questCompleteTitle").replace("<quest>", ChatColor.YELLOW + name
+//                    + ChatColor.GOLD));
+//            if (plugin.getSettings().canShowQuestTitles()) {
+//                Bukkit.getServer().dispatchCommand(Bukkit.getServer().getConsoleSender(), "title " + p.getName()
+//                        + " title " + "{\"text\":\"" + Lang.get(p, "quest") + " " + Lang.get(p, "complete") 
+//                        +  "\",\"color\":\"gold\"}");
+//                Bukkit.getServer().dispatchCommand(Bukkit.getServer().getConsoleSender(), "title " + p.getName()
+//                        + " subtitle " + "{\"text\":\"" + name + "\",\"color\":\"yellow\"}");
+//            }
+//            p.sendMessage(ChatColor.GREEN + Lang.get(p, "questRewardsTitle"));
+//            if (!issuedReward) {
+//                p.sendMessage(ChatColor.GRAY + "- (" + Lang.get("none") + ")");
+//            } else if (!rews.getDetailsOverride().isEmpty()) {
+//                for (final String s: rews.getDetailsOverride()) {
+//                    String message = ChatColor.DARK_GREEN + ConfigUtil.parseString(
+//                            ChatColor.translateAlternateColorCodes('&', s));
+//                    p.sendMessage("- " + message);
+//                }
+//            } else {
+//                if (rews.getQuestPoints() > 0) {
+//                    p.sendMessage("- " + ChatColor.DARK_GREEN + rews.getQuestPoints() + " " 
+//                            + Lang.get(p, "questPoints"));
+//                }
+//                for (final ItemStack i : rews.getItems()) {
+//                    String text = "error";
+//                    if (i.hasItemMeta() && i.getItemMeta().hasDisplayName()) {
+//                        if (i.getEnchantments().isEmpty()) {
+//                            text = "- " + ChatColor.DARK_AQUA + ChatColor.ITALIC + i.getItemMeta().getDisplayName() 
+//                                    + ChatColor.RESET + ChatColor.GRAY + " x " + i.getAmount();
+//                        } else {
+//                            text = "- " + ChatColor.DARK_AQUA + ChatColor.ITALIC + i.getItemMeta().getDisplayName() 
+//                                    + ChatColor.RESET;            
+//                            try {
+//                                if (!i.getItemMeta().hasItemFlag(ItemFlag.HIDE_ENCHANTS)) {
+//                                    text +=  ChatColor.GRAY + " " + Lang.get(p, "with") + ChatColor.DARK_PURPLE;
+//                                    for (final Entry<Enchantment, Integer> e : i.getEnchantments().entrySet()) {
+//                                        text += " " + ItemUtil.getPrettyEnchantmentName(e.getKey()) + ":" + e.getValue();
+//                                    }
+//                                }
+//                            } catch (final Throwable tr) {
+//                                // Do nothing, hasItemFlag() not introduced until 1.8.6
+//                            }
+//                            text += ChatColor.GRAY + " x " + i.getAmount();
+//                        }
+//                    } else if (i.getDurability() != 0) {
+//                        if (i.getEnchantments().isEmpty()) {
+//                            text = "- " + ChatColor.DARK_GREEN + ItemUtil.getName(i) + ":" + i.getDurability() + ChatColor.GRAY
+//                                    + " x " + i.getAmount();
+//                        } else {
+//                            text = "- " + ChatColor.DARK_GREEN + ItemUtil.getName(i) + ":" + i.getDurability() + ChatColor.GRAY
+//                                    + " " + Lang.get(p, "with");
+//                            for (final Entry<Enchantment, Integer> e : i.getEnchantments().entrySet()) {
+//                                text += " " + ItemUtil.getPrettyEnchantmentName(e.getKey()) + ":" + e.getValue();
+//                            }
+//                            text += ChatColor.GRAY + " x " + i.getAmount();
+//                        }
+//                    } else {
+//                        if (i.getEnchantments().isEmpty()) {
+//                            text = "- " + ChatColor.DARK_GREEN + ItemUtil.getName(i) + ChatColor.GRAY + " x " + i.getAmount();
+//                        } else {
+//                            text = "- " + ChatColor.DARK_GREEN + ItemUtil.getName(i);
+//                            try {
+//                                if (!i.getItemMeta().hasItemFlag(ItemFlag.HIDE_ENCHANTS)) {
+//                                    text += ChatColor.GRAY + " " + Lang.get(p, "with");
+//                                    for (final Entry<Enchantment, Integer> e : i.getEnchantments().entrySet()) {
+//                                        text += " " + ItemUtil.getPrettyEnchantmentName(e.getKey()) + ":" + e.getValue();
+//                                    }
+//                                }
+//                            } catch (final Throwable tr) {
+//                                // Do nothing, hasItemFlag() not introduced until 1.8.6
+//                            }
+//                            text += ChatColor.GRAY + " x " + i.getAmount();
+//                        }
+//                    }
+//                    p.sendMessage(text);
+//                }
+//                if (rews.getMoney() > 1) {
+//                    p.sendMessage("- " + ChatColor.DARK_GREEN + rews.getMoney() + " " + ChatColor.DARK_PURPLE 
+//                            + plugin.getDependencies().getCurrency(true));
+//                } else if (rews.getMoney() == 1) {
+//                    p.sendMessage("- " + ChatColor.DARK_GREEN + rews.getMoney() + " " + ChatColor.DARK_PURPLE 
+//                            + plugin.getDependencies().getCurrency(false));
+//                }
+//                if (rews.getCommands().isEmpty() == false) {
+//                    int index = 0;
+//                    for (final String s : rews.getCommands()) {
+//                        if (rews.getCommandsOverrideDisplay().isEmpty() == false && rews.getCommandsOverrideDisplay().size() 
+//                                > index) {
+//                            if (!rews.getCommandsOverrideDisplay().get(index).trim().equals("")) {
+//                                p.sendMessage("- " + ChatColor.DARK_GREEN 
+//                                        + rews.getCommandsOverrideDisplay().get(index));
+//                            }
+//                        } else {
+//                            p.sendMessage("- " + ChatColor.DARK_GREEN + s);
+//                        }
+//                        index++;
+//                    }
+//                }
+//                if (rews.getPermissions().isEmpty() == false) {
+//                    int index = 0;
+//                    for (final String s : rews.getPermissions()) {
+//                        if (rews.getPermissionWorlds() != null && rews.getPermissionWorlds().size() > index) {
+//                            p.sendMessage("- " + ChatColor.DARK_GREEN + s + " (" + rews.getPermissionWorlds().get(index)
+//                                    + ")");
+//                        } else {
+//                            p.sendMessage("- " + ChatColor.DARK_GREEN + s);
+//                            
+//                        }
+//                        index++;
+//                    }
+//                }
+//                if (rews.getMcmmoSkills().isEmpty() == false) {
+//                    for (final String s : rews.getMcmmoSkills()) {
+//                        p.sendMessage("- " + ChatColor.DARK_GREEN 
+//                                + rews.getMcmmoAmounts().get(rews.getMcmmoSkills().indexOf(s)) + " " 
+//                                + ChatColor.DARK_PURPLE + s + " " + Lang.get(p, "experience"));
+//                    }
+//                }
+//                if (rews.getHeroesClasses().isEmpty() == false) {
+//                    for (final String s : rews.getHeroesClasses()) {
+//                        p.sendMessage("- " + ChatColor.AQUA 
+//                                + rews.getHeroesAmounts().get(rews.getHeroesClasses().indexOf(s)) + " " + ChatColor.BLUE 
+//                                + s + " " + Lang.get(p, "experience"));
+//                    }
+//                }
+//                for (final String s : rews.getCustomRewards().keySet()) {
+//                    CustomReward found = null;
+//                    for (final CustomReward cr : plugin.getCustomRewards()) {
+//                        if (cr.getName().equalsIgnoreCase(s)) {
+//                            found = cr;
+//                            break;
+//                        }
+//                    }
+//                    if (found != null) {
+//                        final Map<String, Object> datamap = rews.getCustomRewards().get(found.getName());
+//                        String message = found.getDisplay();
+//                        if (message != null) {
+//                            for (final String key : datamap.keySet()) {
+//                                message = message.replace("%" + key + "%", datamap.get(key).toString());
+//                            }
+//                            p.sendMessage("- " + ChatColor.GOLD + message);
+//                        } else {
+//                            plugin.getLogger().warning("Failed to notify player: " 
+//                                    + "Custom Reward does not have an assigned name");
+//                        }
+//                        found.giveReward(p, rews.getCustomRewards().get(s));
+//                    } else {
+//                        plugin.getLogger().warning("Quester \"" + player.getName() + "\" completed the Quest \"" + name 
+//                                + "\", but the Custom Reward \"" + s + "\" could not be found. Does it still exist?");
+//                    }
+//                }
+//            }
         }
         q.saveData();
         if (player.isOnline()) {
