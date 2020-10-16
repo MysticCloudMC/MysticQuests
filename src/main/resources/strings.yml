@@ -556,7 +556,7 @@ dateCreateEnterZone: "Enter a UTC time zone, <cancel>"
 dateCreateNoYearAmount: "You must set a year first!"
 overrideCreateSet: "Set details list override"
 overrideCreateEnter: "Enter replacement text, <clear>, <cancel>"
-questObjectivesTitle: "&c*&a&lStarting &a<quest>"
+questObjectivesTitle: "%darkred%*%green%%bold%Starting %green%<quest>"
 questCompleteTitle: '**QUEST COMPLETE: <quest>**'
 questRewardsTitle: "Rewards:"
 questFailed: "*QUEST FAILED*"
