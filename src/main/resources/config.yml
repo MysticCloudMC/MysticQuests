@@ -15,7 +15,7 @@ npc-effects:
   new-quest: note
   redo-quest: angry_villager
 show-requirements: true
-show-titles: true
+show-titles: false
 strict-player-movement: 0
 top-limit: 150
 translate-names: true
